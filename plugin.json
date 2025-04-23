@@ -1,0 +1,13 @@
+{
+  "$schema": "https://www.flowlauncher.com/schemas/plugin.schema.json",
+  "ID": "d4688096abe149538b47xf39aa5c7b6f",
+  "ActionKeywords": ["d"],
+  "Name": "Docker Utilities",
+  "Description": "All your docker utilities in one place.",
+  "Author": "Crakzzy",
+  "Version": "1.0.0",
+  "Language": "javascript",
+  "ExecuteFileName": "./dist/index.js",
+  "Website": "",
+  "IcoPath": "./icon.png"
+}
