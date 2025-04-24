@@ -38,9 +38,14 @@ flow.on("showExpandedContainerInfo", ({parameters}, response) => {
     response.changeQuery(`d ps ${container.Names}`);
 })
 
+flow.on("goToNestedAttribute", ({parameters}, response) => {
+    const containerName = parameters[0];
+    const keys = parameters.slice(1);
+
+    const query = `d inspect ${containerName} ${keys.join(' ')}`;
+    response.changeQuery(query);
+});
+
 flow.on("copy_result", ({parameters}) => {
-    if (parameters.toString() === "[object Object]") {
-        return;
-    }
     copy(parameters.toString());
 });

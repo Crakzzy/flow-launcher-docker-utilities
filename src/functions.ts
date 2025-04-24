@@ -80,24 +80,6 @@ export function getRunningContainersInfo(params: string[], response: FlowRespons
     }
 }
 
-function iterateOverContainerInfo(container: any, response: FlowResponse, parentKey: string = ""): void {
-    for (const key in container) {
-        if (Object.prototype.hasOwnProperty.call(container, key)) {
-            const value = container[key];
-            const currentKey = parentKey ? `${parentKey}.${key}` : key;
-
-            if (typeof value === "object" && value !== null) {
-                iterateOverContainerInfo(value, response, currentKey);
-            } else {
-                response.add({
-                    title: currentKey,
-                    subtitle: String(value),
-                });
-            }
-        }
-    }
-}
-
 export function getContainerInspectionInfo(params: string[], response: FlowResponse): void {
     if (params.length < 2) {
         response.add({
@@ -128,8 +110,9 @@ export function getContainerInspectionInfo(params: string[], response: FlowRespo
                     title: key,
                     subtitle: String(value),
                     jsonRPCAction: {
-                        method: "copy_result",
-                        parameters: [value],
+                        method: "goToNestedAttribute",
+                        parameters: [containerName, typeof value === 'object' ? key : value],
+                        dontHideAfterAction: true,
                     }
                 });
             }
@@ -168,12 +151,16 @@ export function getContainerInspectionInfo(params: string[], response: FlowRespo
         for (const key in currentValue) {
             if (Object.prototype.hasOwnProperty.call(currentValue, key)) {
                 const value = currentValue[key];
+
+                const fullPath = [...params.slice(2), key];
+
                 response.add({
                     title: key,
                     subtitle: String(value),
                     jsonRPCAction: {
-                        method: "copy_result",
-                        parameters: [value],
+                        method: "goToNestedAttribute",
+                        parameters: [containerName, ...fullPath],
+                        dontHideAfterAction: true,
                     }
                 });
             }
