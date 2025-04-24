@@ -1,6 +1,6 @@
 import {Flow} from "flow-plugin";
 import {DockerContainer} from "./types.js";
-import {copy, getRunningContainersInfo} from "./functions.js";
+import {copy, getContainerInspectionInfo, getRunningContainersInfo} from "./functions.js";
 
 const flow = new Flow({keepOrder: true, icon: "./icon.png"});
 
@@ -23,6 +23,10 @@ flow.on("query", ({prompt}, response) => {
                     getRunningContainersInfo(params, response);
                     break;
                 }
+                case "inspect" : {
+                    getContainerInspectionInfo(params, response);
+                    break;
+                }
             }
         } catch (error) {
         }
@@ -35,5 +39,8 @@ flow.on("showExpandedContainerInfo", ({parameters}, response) => {
 })
 
 flow.on("copy_result", ({parameters}) => {
+    if (parameters.toString() === "[object Object]") {
+        return;
+    }
     copy(parameters.toString());
 });
