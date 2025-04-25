@@ -27,7 +27,7 @@ flow.on("query", ({prompt}, response) => {
                     getContainerInspectionInfo(params, response);
                     break;
                 }
-                case "network" : {
+                case "networks" : {
                     getNetworks(params, response);
                     break;
                 }

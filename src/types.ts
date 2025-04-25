@@ -238,3 +238,44 @@ export interface DockerNetwork {
     Name: string,
     Scope: string,
 }
+
+export interface DockerNetworkInfo {
+    Name: string;
+    Id: string;
+    Created: string;
+    Scope: string;
+    Driver: string;
+    EnableIPv6: boolean;
+    IPAM: IPAM,
+    Internal: boolean;
+    Attachable: boolean;
+    Ingress: boolean;
+    ConfigFrom: {Network: string},
+    ConfigOnly: boolean;
+    Containers: DockerNetworkContainers;
+    Options: Record<string, string>;
+    Labels: Record<string, string>;
+}
+
+interface DockerNetworkContainer {
+    Name: string;
+    EndpointID: string;
+    MacAddress: string;
+    IPv4Address: string;
+    IPv6Address: string;
+}
+
+interface DockerNetworkContainers {
+    [containerId: string]: DockerNetworkContainer;
+}
+
+interface IPAM {
+    Driver: string;
+    Options: object,
+    Config: IPAMConfig[],
+}
+
+interface IPAMConfig {
+    Subnet: string;
+    Gateway: string;
+}
