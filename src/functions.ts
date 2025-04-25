@@ -1,5 +1,5 @@
 import child_process from "child_process";
-import {DockerContainer, DockerContainerInfo} from "./types.js";
+import {DockerContainer, DockerContainerInfo, DockerNetwork} from "./types.js";
 import childProcess from "child_process";
 import {FlowResponse} from "flow-plugin";
 
@@ -10,6 +10,20 @@ function ps(): DockerContainer[] {
         if (index !== rawContainer.length - 1) {
             try {
                 return JSON.parse(container);
+            } catch (error) {
+                return null;
+            }
+        }
+    });
+}
+
+function networks(): DockerNetwork[] {
+    const rawNetworks = child_process.execSync("docker network ls --format json").toString().split("\n");
+
+    return rawNetworks.map((network, index) => {
+        if (index !== rawNetworks.length - 1) {
+            try {
+                return JSON.parse(network);
             } catch (error) {
                 return null;
             }
@@ -176,6 +190,48 @@ export function getContainerInspectionInfo(params: string[], response: FlowRespo
             }
         });
     }
+}
+
+export function getNetworks(params: string[], response: FlowResponse): void {
+
+    if (params.length !== 2 || params[1] !== "ls") {
+        response.add({
+            title: "Docker network",
+            subtitle: "Please provide a valid command",
+        });
+        return;
+    }
+
+    if (params.length > 2) {
+        response.add({
+            title: "Docker networks",
+            subtitle: "Too many parameters",
+        });
+        return;
+    }
+
+    const networksList: DockerNetwork[] = networks();
+
+    if (networksList.length === 0) {
+        response.add({
+            title: "Docker networks",
+            subtitle: "No networks found",
+        });
+        return;
+    }
+
+    networksList.forEach(network => {
+        response.add({
+            title: network.Name,
+            subtitle: network.Driver,
+            jsonRPCAction: {
+                method: "showExpandedNetworkInfo",
+                parameters: [network],
+                dontHideAfterAction: true,
+            }
+        })
+    })
+    return;
 }
 
 export function copy(content: string) {

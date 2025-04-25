@@ -1,6 +1,6 @@
 import {Flow} from "flow-plugin";
 import {DockerContainer} from "./types.js";
-import {copy, getContainerInspectionInfo, getRunningContainersInfo} from "./functions.js";
+import {copy, getContainerInspectionInfo, getNetworks, getRunningContainersInfo} from "./functions.js";
 
 const flow = new Flow({keepOrder: true, icon: "./icon.png"});
 
@@ -25,6 +25,10 @@ flow.on("query", ({prompt}, response) => {
                 }
                 case "inspect" : {
                     getContainerInspectionInfo(params, response);
+                    break;
+                }
+                case "network" : {
+                    getNetworks(params, response);
                     break;
                 }
             }

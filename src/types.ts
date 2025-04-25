@@ -226,3 +226,15 @@ export interface DockerContainerInfo {
     Config: Config;
     NetworkSettings: NetworkSettings;
 }
+
+export interface DockerNetwork {
+    CreatedAt: string,
+    Driver: string,
+    ID: string,
+    IPv4: string,
+    IPv6: string,
+    Internal: string,
+    Labels: string,
+    Name: string,
+    Scope: string,
+}
